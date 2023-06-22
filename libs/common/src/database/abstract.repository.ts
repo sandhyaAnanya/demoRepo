@@ -1,0 +1,47 @@
+import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
+import { AbstractDocument } from "./abstract.schema";
+import { Logger, NotFoundException } from "@nestjs/common";
+
+
+export abstract class AbstractRepository<TDocument extends AbstractDocument>{
+    protected abstract readonly logger: Logger
+    constructor(protected readonly model: Model<TDocument>) { }
+
+    async createDocument(document: Omit<TDocument, '_id'>): Promise<TDocument> {
+        const newDocument = new this.model({
+            ...document,
+            _id: new Types.ObjectId()
+        })
+        return (await newDocument.save()).toJSON() as unknown as TDocument
+    }
+
+    async findOne(filterQuery: FilterQuery<TDocument>): Promise<TDocument> {
+        const document = await this.model.findOne(filterQuery, {}, { lean: true })
+        if (!document) {
+            this.logger.warn('document not found', filterQuery)
+            throw new NotFoundException('document not found')
+        }
+        return document;
+    }
+
+    async findOneAndUpdate(
+        filterQuery: FilterQuery<TDocument>,
+        update: UpdateQuery<TDocument>
+    ): Promise<TDocument> {
+        const document = await this.model.findOneAndUpdate(filterQuery, update, { lean: true, new: true })
+        if (!document) {
+            this.logger.warn('document not found', filterQuery)
+            throw new NotFoundException('document not found')
+        }
+        return document
+    }
+
+    async findoneAndDelete(filterQuery: FilterQuery<TDocument>) {
+        return await this.model.findByIdAndDelete(filterQuery)
+    }
+
+
+    async findAll(filterQuery: FilterQuery<TDocument>) {
+        return await this.model.find(filterQuery, {}, { lean: true })
+    }
+}
