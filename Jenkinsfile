@@ -1,5 +1,9 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'node:latest'
+    }
+  }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
