@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Auth-Build') {
       steps {
-        sh 'docker build ../../ -f Dockerfile -t sandhya123exza/auth-service --no-cache --progress=plain'
+        sh 'docker build -f Dockerfile -t sandhya123exza/auth-service --no-cache --progress=plain'
       }
     }
     stage('Build-Notifications') {
