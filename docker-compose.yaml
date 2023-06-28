@@ -5,7 +5,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - app
+      - ./:/app
     networks:
       - reservations
   auth:
@@ -14,7 +14,7 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - app 
+      - ./:/app
     networks:
       - reservations 
   payment:
@@ -23,7 +23,7 @@ services:
     ports:
       - "3003:3003"
     volumes:
-      - app 
+      - ./:/app
     networks:
       - reservations
   notifications:
@@ -32,7 +32,7 @@ services:
     ports:
       - "3004:3004"
     volumes:
-      - app    
+      - ./:/app   
     networks:
       - reservations
   mongo:
@@ -40,7 +40,9 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - app
+      - ./:/app
     networks:
       - reservations
+networks:
+  reservations:
     
