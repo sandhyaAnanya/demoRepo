@@ -1,15 +1,18 @@
 FROM node:alpine as development
-WORKDIR /usr/src/app
-COPY package.json ./
+WORKDIR /app
+COPY package.json /app
+RUN pwd
+RUN ls -lts ..
+RUN ls -lts ../app
 RUN npm install
 COPY . .
 RUN npm run build auth
 
-FROM node:alpine as production
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-WORKDIR /usr/src/app
-COPY package.json ./
-RUN npm install --prod
-COPY --from=development /usr/src/app/dist ./dist
-CMD [ "node","dist/apps/auth/main" ]
+# FROM node:alpine as production
+# ARG NODE_ENV=production
+# ENV NODE_ENV=${NODE_ENV}
+# WORKDIR /usr/src/app
+# COPY package.json ./
+# RUN npm install --prod
+# COPY --from=development /usr/src/app/dist ./dist
+# CMD [ "node","dist/apps/auth/main" ]

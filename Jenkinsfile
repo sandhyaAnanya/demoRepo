@@ -7,12 +7,26 @@ pipeline {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
   }
   stages {
-    stage('Build') {
+    stage('Auth-Build') {
       steps {
-        sh 'docker build ../../ -f ./apps/auth/Dockerfile -t sandhya123exza/auth-service'
-        sh 'docker build ../../ -f ./apps/notifications/Dockerfile -t sandhya123exza/notifications-service'
-        sh 'docker build ../../ -f ./apps/payment/Dockerfile -t sandhya123exza/payment-service'
-        sh 'docker build ../../ -f ./apps/reservations/Dockerfile -t sandhya123exza/reservations-service'
+        sh 'docker build ../../ -f Dockerfile -t sandhya123exza/auth-service --no-cache --progress=plain'
+      }
+    }
+    stage('Build-Notifications') {
+      steps {
+        sh 'docker build ../../ -f Dockerfile -t sandhya123exza/notifications-service --no-cache --progress=plain'
+        
+      }
+    }
+    stage('Build-Payment') {
+      steps {
+        sh 'docker build ../../ -f Dockerfile -t sandhya123exza/payment-service --no-cache --progress=plain'
+        
+      }
+    }
+    stage('Build-Reservations') {
+      steps {
+        sh 'docker build ../../ -f Dockerfile -t sandhya123exza/reservations-service --no-cache --progress=plain'
       }
     }
     stage('Login') {
